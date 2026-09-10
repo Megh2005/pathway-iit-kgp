@@ -2,45 +2,53 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import {
   BookOpen,
-  Sparkles,
-  Flame,
   FileText,
   MessageSquare,
   Upload,
   Search,
   Share2,
   CheckCircle2,
-  ExternalLink,
   Clock,
-  Layers,
-  ArrowRight,
   Printer,
   ChevronRight,
+  Cpu,
+  Layers,
+  Scale,
+  Compass,
+  X,
+  PlusCircle,
 } from 'lucide-react';
 import { usePaper } from '../context/PaperContext';
-import { DoomscrollFeed } from '../components/DoomscrollFeed';
+import { ExecutiveBriefingView } from '../components/ExecutiveBriefingView';
 import { NewOutputsSection } from '../components/NewOutputsSection';
 import { ComparativeAnalogyLab } from '../components/ComparativeAnalogyLab';
 import { RelatedPapersRadar } from '../components/RelatedPapersRadar';
 import { BuzzAndTrendsSection } from '../components/BuzzAndTrendsSection';
 import { FutureScopeSection } from '../components/FutureScopeSection';
 import { PaperChatDrawer } from '../components/PaperChatDrawer';
+import { PaperIngestionConsole } from '../components/PaperIngestionConsole';
 
-type ActiveTab = 'feed' | 'breakthroughs' | 'analogy' | 'related' | 'buzz' | 'future';
+type ActiveTab = 'briefing' | 'methodology' | 'analogies' | 'literature' | 'reception' | 'future';
 
 export const AnalysisWorkspacePage: React.FC = () => {
   const { tab } = useParams<{ tab?: string }>();
   const navigate = useNavigate();
   const { currentPaper } = usePaper();
 
-  const [activeTab, setActiveTab] = useState<ActiveTab>('feed');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('briefing');
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [isIngestionModalOpen, setIsIngestionModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Sync tab from URL params if present
+  // Sync tab from URL params if present (supporting both legacy & formal tab keys)
   useEffect(() => {
-    if (tab && ['feed', 'breakthroughs', 'analogy', 'related', 'buzz', 'future'].includes(tab)) {
-      setActiveTab(tab as ActiveTab);
+    if (tab) {
+      if (tab === 'feed' || tab === 'briefing') setActiveTab('briefing');
+      else if (tab === 'breakthroughs' || tab === 'methodology') setActiveTab('methodology');
+      else if (tab === 'analogy' || tab === 'analogies') setActiveTab('analogies');
+      else if (tab === 'related' || tab === 'literature') setActiveTab('literature');
+      else if (tab === 'buzz' || tab === 'reception') setActiveTab('reception');
+      else if (tab === 'future') setActiveTab('future');
     }
   }, [tab]);
 
@@ -51,47 +59,28 @@ export const AnalysisWorkspacePage: React.FC = () => {
 
   const handleCopySummary = () => {
     if (!currentPaper) return;
-    const text = `Research Analysis: ${currentPaper.paperMeta.title} (${currentPaper.paperMeta.year})\n\nTL;DR: ${currentPaper.paperMeta.tldr}\n\nPrimary Breakthrough: ${currentPaper.newOutputs.primaryBreakthrough}`;
+    const text = `Scholarly Dossier: ${currentPaper.paperMeta.title} (${currentPaper.paperMeta.year})\nAuthors: ${
+      Array.isArray(currentPaper.paperMeta.authors)
+        ? currentPaper.paperMeta.authors.join(', ')
+        : currentPaper.paperMeta.authors
+    }\n\nExecutive TL;DR:\n${currentPaper.paperMeta.tldr}\n\nPrimary Breakthrough:\n${
+      currentPaper.newOutputs.primaryBreakthrough
+    }\n\nEveryday Intuition Analogy:\n${currentPaper.comparativeAnalogies.intuitionTakeaway}`;
+
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // If no paper is currently loaded, display the empty state prompt
+  const handlePrint = () => {
+    window.print();
+  };
+
+  // If no paper is currently loaded, display the Paper Ingestion Console directly!
   if (!currentPaper) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center p-4 bg-slate-50">
-        <div className="max-w-md w-full text-center bg-white rounded-3xl p-8 sm:p-10 border border-slate-200 shadow-sm">
-          <div className="w-16 h-16 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mx-auto mb-5 border border-indigo-100">
-            <BookOpen className="w-8 h-8" />
-          </div>
-          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight mb-2">
-            No Research Paper Loaded
-          </h2>
-          <p className="text-xs text-slate-600 leading-relaxed mb-6">
-            In order to view the interactive Doomscroll feed, novel breakthrough outputs, comparative analogies,
-            and citation radar, please upload an academic PDF research paper.
-          </p>
-          <div className="space-y-3">
-            <Link
-              to="/upload"
-              id="empty-state-upload-btn"
-              className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-sm transition-all active:scale-95 shadow-indigo-200"
-            >
-              <Upload className="w-4 h-4" />
-              <span>Go to PDF Upload Studio</span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
-
-            <Link
-              to="/search"
-              className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs transition-colors"
-            >
-              <Search className="w-3.5 h-3.5 text-slate-500" />
-              <span>Or Explore Grounded Literature</span>
-            </Link>
-          </div>
-        </div>
+      <div className="min-h-[85vh] bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
+        <PaperIngestionConsole />
       </div>
     );
   }
@@ -100,201 +89,230 @@ export const AnalysisWorkspacePage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 pb-20">
-      {/* Paper Header / Metadata Hero */}
-      <div className="bg-white border-b border-slate-200/90 shadow-xs">
+      {/* Paper Header / Metadata Dossier */}
+      <div className="bg-white border-b border-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-            <div className="space-y-2 max-w-4xl">
+          <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
+            <div className="space-y-3 max-w-4xl">
               {/* Meta Tags */}
               <div className="flex flex-wrap items-center gap-2 text-xs">
-                <span className="bg-indigo-50 text-indigo-700 font-bold px-3 py-0.5 rounded-full border border-indigo-100 flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-indigo-600" /> {paperMeta.domain}
+                <span className="bg-slate-100 text-slate-800 font-bold px-2.5 py-0.5 rounded border border-slate-200">
+                  {paperMeta.domain}
                 </span>
-                <span className="bg-slate-100 text-slate-700 font-semibold px-2.5 py-0.5 rounded-full">
-                  {paperMeta.year} &bull; {paperMeta.journalOrConference || 'Preprint'}
+                <span className="bg-slate-50 text-slate-700 font-medium px-2.5 py-0.5 rounded border border-slate-200">
+                  {paperMeta.year} &bull; {paperMeta.journalOrConference || 'Preprint Publication'}
                 </span>
                 {paperMeta.doiOrArxiv && (
-                  <span className="text-slate-500 font-mono text-[11px]">
+                  <span className="text-slate-500 font-mono text-xs">
                     {paperMeta.doiOrArxiv}
                   </span>
                 )}
-                <span className="bg-amber-50 text-amber-800 font-medium px-2 py-0.5 rounded-full text-[11px] border border-amber-200">
-                  {paperMeta.complexityRating}
+                <span className="bg-slate-50 text-slate-700 font-medium px-2 py-0.5 rounded text-xs border border-slate-200">
+                  Rating: {paperMeta.complexityRating}
                 </span>
-                <span className="text-slate-400 flex items-center gap-1 text-[11px]">
-                  <Clock className="w-3 h-3" /> {paperMeta.readingTimeMinutes} min digest
+                <span className="text-slate-500 flex items-center gap-1 text-xs">
+                  <Clock className="w-3.5 h-3.5 text-slate-400" />
+                  <span>{paperMeta.readingTimeMinutes} min formal digest</span>
                 </span>
               </div>
 
               {/* Title */}
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 tracking-tight">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 tracking-tight leading-tight">
                 {paperMeta.title}
               </h1>
 
               {/* Authors */}
-              <p className="text-xs text-slate-500">
-                Authors:{' '}
-                <span className="text-slate-800 font-medium">
+              <p className="text-xs sm:text-sm text-slate-600">
+                <span className="font-semibold text-slate-700">Authors:</span>{' '}
+                <span className="text-slate-800">
                   {Array.isArray(paperMeta.authors) ? paperMeta.authors.join(', ') : paperMeta.authors}
                 </span>
               </p>
 
-              {/* TL;DR Card */}
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200/70 text-xs text-slate-700 mt-2">
-                <strong className="text-indigo-900 font-semibold">Executive TL;DR: </strong>
-                <span>{paperMeta.tldr}</span>
+              {/* Executive TL;DR Card */}
+              <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-800">
+                <strong className="font-bold text-slate-900 block mb-1">Executive Summary:</strong>
+                <p className="leading-relaxed font-normal">{paperMeta.tldr}</p>
               </div>
             </div>
 
-            {/* Quick Right-Hand Actions */}
-            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 lg:self-start shrink-0">
-              <Link
-                to="/upload"
-                className="inline-flex items-center gap-1.5 text-xs text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-xl font-medium border border-slate-200 transition-colors"
-                title="Upload another research paper"
+            {/* Quick Action Buttons */}
+            <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
+              <button
+                onClick={() => setIsIngestionModalOpen(true)}
+                className="inline-flex items-center gap-1.5 text-xs text-slate-700 bg-white hover:bg-slate-50 px-3.5 py-2 rounded-lg font-semibold border border-slate-200 transition-colors shadow-xs"
+                title="Analyze a different research paper"
               >
-                <Upload className="w-3.5 h-3.5" />
-                <span>Upload New Paper</span>
-              </Link>
+                <PlusCircle className="w-3.5 h-3.5 text-slate-500" />
+                <span>New Paper</span>
+              </button>
 
               <button
                 onClick={handleCopySummary}
-                className="inline-flex items-center gap-1.5 text-xs text-slate-700 bg-white hover:bg-slate-50 px-3 py-2 rounded-xl font-medium border border-slate-200 transition-colors shadow-xs"
+                className="inline-flex items-center gap-1.5 text-xs text-slate-700 bg-white hover:bg-slate-50 px-3.5 py-2 rounded-lg font-semibold border border-slate-200 transition-colors shadow-xs"
+                title="Copy formal summary to clipboard"
               >
-                {copied ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" /> : <Share2 className="w-3.5 h-3.5" />}
-                <span>{copied ? 'Copied' : 'Share'}</span>
+                {copied ? (
+                  <CheckCircle2 className="w-3.5 h-3.5 text-slate-900" />
+                ) : (
+                  <Share2 className="w-3.5 h-3.5 text-slate-500" />
+                )}
+                <span>{copied ? 'Copied' : 'Export'}</span>
+              </button>
+
+              <button
+                onClick={handlePrint}
+                className="hidden sm:inline-flex items-center gap-1.5 text-xs text-slate-700 bg-white hover:bg-slate-50 px-3 py-2 rounded-lg font-semibold border border-slate-200 transition-colors shadow-xs"
+                title="Print or export to PDF"
+              >
+                <Printer className="w-3.5 h-3.5 text-slate-500" />
+                <span>Print</span>
               </button>
 
               <button
                 onClick={() => setIsChatOpen(true)}
-                className="inline-flex items-center gap-1.5 text-xs text-white bg-indigo-600 hover:bg-indigo-700 px-3.5 py-2 rounded-xl font-bold shadow-xs shadow-indigo-200 transition-all active:scale-95"
+                className="inline-flex items-center gap-1.5 text-xs text-white bg-slate-900 hover:bg-slate-800 px-3.5 py-2 rounded-lg font-semibold shadow-xs transition-all active:scale-98"
               >
-                <MessageSquare className="w-3.5 h-3.5" />
+                <MessageSquare className="w-3.5 h-3.5 text-slate-300" />
                 <span>Ask AI Assistant</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Sub-Navigation Tabs Bar */}
-        <div className="border-t border-slate-200/80 bg-slate-50/60">
+        {/* Formal Tab Navigation Bar */}
+        <div className="border-t border-slate-200 bg-slate-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <nav className="flex space-x-1 sm:space-x-2 py-2 overflow-x-auto no-scrollbar text-xs font-semibold">
+            <nav className="flex space-x-1 sm:space-x-2 py-2 overflow-x-auto text-xs font-semibold">
               <button
-                onClick={() => handleTabChange('feed')}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl whitespace-nowrap transition-all ${
-                  activeTab === 'feed'
-                    ? 'bg-white text-indigo-700 shadow-xs border border-slate-200 font-bold'
+                onClick={() => handleTabChange('briefing')}
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg whitespace-nowrap transition-all ${
+                  activeTab === 'briefing'
+                    ? 'bg-white text-slate-900 shadow-xs border border-slate-300 font-bold'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
                 }`}
               >
-                <Flame className={`w-3.5 h-3.5 ${activeTab === 'feed' ? 'text-indigo-600' : 'text-slate-400'}`} />
-                <span>Doomscroll Feed</span>
+                <BookOpen className="w-3.5 h-3.5 text-slate-500" />
+                <span>Executive Briefing</span>
               </button>
 
               <button
-                onClick={() => handleTabChange('breakthroughs')}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl whitespace-nowrap transition-all ${
-                  activeTab === 'breakthroughs'
-                    ? 'bg-white text-indigo-700 shadow-xs border border-slate-200 font-bold'
+                onClick={() => handleTabChange('methodology')}
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg whitespace-nowrap transition-all ${
+                  activeTab === 'methodology'
+                    ? 'bg-white text-slate-900 shadow-xs border border-slate-300 font-bold'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
                 }`}
               >
-                <FileText className={`w-3.5 h-3.5 ${activeTab === 'breakthroughs' ? 'text-indigo-600' : 'text-slate-400'}`} />
-                <span>Novel Outputs</span>
+                <Cpu className="w-3.5 h-3.5 text-slate-500" />
+                <span>Methodology & Novelty</span>
               </button>
 
               <button
-                onClick={() => handleTabChange('analogy')}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl whitespace-nowrap transition-all ${
-                  activeTab === 'analogy'
-                    ? 'bg-white text-indigo-700 shadow-xs border border-slate-200 font-bold'
+                onClick={() => handleTabChange('analogies')}
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg whitespace-nowrap transition-all ${
+                  activeTab === 'analogies'
+                    ? 'bg-white text-slate-900 shadow-xs border border-slate-300 font-bold'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
                 }`}
               >
-                <Sparkles className={`w-3.5 h-3.5 ${activeTab === 'analogy' ? 'text-indigo-600' : 'text-slate-400'}`} />
-                <span>Analogy Lab</span>
+                <Layers className="w-3.5 h-3.5 text-slate-500" />
+                <span>Conceptual Analogies</span>
               </button>
 
               <button
-                onClick={() => handleTabChange('related')}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl whitespace-nowrap transition-all ${
-                  activeTab === 'related'
-                    ? 'bg-white text-indigo-700 shadow-xs border border-slate-200 font-bold'
+                onClick={() => handleTabChange('literature')}
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg whitespace-nowrap transition-all ${
+                  activeTab === 'literature'
+                    ? 'bg-white text-slate-900 shadow-xs border border-slate-300 font-bold'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
                 }`}
               >
-                <BookOpen className={`w-3.5 h-3.5 ${activeTab === 'related' ? 'text-indigo-600' : 'text-slate-400'}`} />
-                <span>Related Papers ({currentPaper.relatedPapers?.length || 0})</span>
+                <FileText className="w-3.5 h-3.5 text-slate-500" />
+                <span>Related Literature</span>
+                <span className="text-[10px] font-mono font-bold bg-slate-200 text-slate-700 px-1.5 py-0.2 rounded ml-0.5">
+                  {currentPaper.relatedPapers?.length || 0}
+                </span>
               </button>
 
               <button
-                onClick={() => handleTabChange('buzz')}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl whitespace-nowrap transition-all ${
-                  activeTab === 'buzz'
-                    ? 'bg-white text-indigo-700 shadow-xs border border-slate-200 font-bold'
+                onClick={() => handleTabChange('reception')}
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg whitespace-nowrap transition-all ${
+                  activeTab === 'reception'
+                    ? 'bg-white text-slate-900 shadow-xs border border-slate-300 font-bold'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
                 }`}
               >
-                <Flame className={`w-3.5 h-3.5 ${activeTab === 'buzz' ? 'text-amber-500' : 'text-slate-400'}`} />
-                <span>Buzz & Trends</span>
+                <Scale className="w-3.5 h-3.5 text-slate-500" />
+                <span>Field Reception</span>
               </button>
 
               <button
                 onClick={() => handleTabChange('future')}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl whitespace-nowrap transition-all ${
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg whitespace-nowrap transition-all ${
                   activeTab === 'future'
-                    ? 'bg-white text-indigo-700 shadow-xs border border-slate-200 font-bold'
+                    ? 'bg-white text-slate-900 shadow-xs border border-slate-300 font-bold'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-white/60'
                 }`}
               >
-                <Sparkles className={`w-3.5 h-3.5 ${activeTab === 'future' ? 'text-indigo-600' : 'text-slate-400'}`} />
-                <span>Future Scope</span>
+                <Compass className="w-3.5 h-3.5 text-slate-500" />
+                <span>Limitations & Agenda</span>
               </button>
             </nav>
           </div>
         </div>
       </div>
 
-      {/* Main Tab Content View */}
+      {/* Main Workspace Body */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        {activeTab === 'feed' && (
-          <DoomscrollFeed
+        {activeTab === 'briefing' && (
+          <ExecutiveBriefingView
             paperData={currentPaper}
             onNavigateTab={(targetTab) => handleTabChange(targetTab as ActiveTab)}
           />
         )}
 
-        {activeTab === 'breakthroughs' && (
-          <NewOutputsSection paperData={currentPaper} />
-        )}
+        {activeTab === 'methodology' && <NewOutputsSection paperData={currentPaper} />}
 
-        {activeTab === 'analogy' && (
-          <ComparativeAnalogyLab paperData={currentPaper} />
-        )}
+        {activeTab === 'analogies' && <ComparativeAnalogyLab paperData={currentPaper} />}
 
-        {activeTab === 'related' && (
+        {activeTab === 'literature' && (
           <RelatedPapersRadar
             paperData={currentPaper}
             onOpenLiveSearch={() => navigate('/search')}
           />
         )}
 
-        {activeTab === 'buzz' && (
-          <BuzzAndTrendsSection paperData={currentPaper} />
-        )}
+        {activeTab === 'reception' && <BuzzAndTrendsSection paperData={currentPaper} />}
 
-        {activeTab === 'future' && (
-          <FutureScopeSection paperData={currentPaper} />
-        )}
+        {activeTab === 'future' && <FutureScopeSection paperData={currentPaper} />}
       </main>
 
-      {/* Floating Chat Drawer for Context-Aware Paper Q&A */}
+      {/* Interactive Paper AI Assistant Drawer */}
       <PaperChatDrawer
         isOpen={isChatOpen}
         onClose={() => setIsChatOpen(false)}
         paperData={currentPaper}
       />
+
+      {/* Modal for Ingesting a New Paper */}
+      {isIngestionModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
+          <div className="relative w-full max-w-3xl bg-white rounded-2xl shadow-xl overflow-hidden max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setIsIngestionModalOpen(false)}
+              className="absolute top-4 right-4 z-10 p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
+              title="Close"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <PaperIngestionConsole
+              compact={true}
+              onAnalysisSuccess={() => setIsIngestionModalOpen(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

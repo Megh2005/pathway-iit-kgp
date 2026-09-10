@@ -47,15 +47,24 @@ async function startServer() {
 
       const ai = getGeminiClient();
 
-      const systemPrompt = `You are a world-class principal AI research scientist, peer reviewer, and science communicator.
-Your mission is to perform an in-depth, rigorous, yet deeply intuitive analysis of the provided research paper (or text / title).
-You must extract the genuine new outputs, evaluate the actual paradigm shift, craft intuitive comparative analogies, generate a high-engagement 6 to 8-step "doomscroll" bite-sized feed (like bite-sized research reels), find REAL ACTUALLY EXISTING related papers with valid URLs (arXiv, Semantic Scholar, IEEE, Nature, etc.), and synthesize the latest academic and industry buzz, open challenges, and future scope.
+      const systemPrompt = `You are a senior academic research scientist, principal peer reviewer, and scientific editor.
+Your mission is to perform an authoritative, thorough, and highly structured technical analysis of the provided research paper (or text / title).
+Your analysis must be formal, precise, and easily comprehensible for researchers, students, and engineers alike.
+
+Conduct a deep, rigorous evaluation covering:
+1. Executive meta information (title, authors, year, journal/conference, DOI/arXiv, domain, executive TL;DR, reading time, complexity level).
+2. Primary breakthroughs, exact mathematical or procedural mechanisms introduced, key empirical findings, benchmark comparisons with quantitative gains, and a structured before-and-after status quo contrast.
+3. Plain-language conceptual analogies that translate dense technical formulations into intuitive, physically relatable systems, with audience-specific explanations (for students, engineering leads, and senior researchers).
+4. A 6 to 8-step structured executive briefing (digestible cards detailing: context/hook, core problem, key breakthrough, mechanical architecture, conceptual analogy, empirical benchmark, industry impact, future outlook).
+5. Real, verified related publications that actually exist in academic literature with authors, year, venue, and authentic URLs (arXiv, DOI, IEEE, ACM, Nature, etc.).
+6. Scholarly assessment and industry reception, adoption status, open debates, and milestone timeline.
+7. Critical limitations, unanswered questions, and concrete dissertation or research thesis topics.
 
 CRITICAL REQUIREMENTS:
-1. All referenced related papers MUST BE REAL AND ACTUALLY EXISTING. Provide verified arXiv or publication URLs.
-2. The "doomscrollCards" must be deeply insightful, punchy, conversational yet precise, breaking the paper into intuitive digestible bites.
-3. Comparative analogies must bridge dense math/methods into crystal-clear real-world systems.
-4. Output MUST be strictly a single, valid JSON object matching the requested schema without extra text outside the JSON.
+1. All referenced related papers MUST BE REAL AND ACTUALLY EXISTING.
+2. The tone must be formal, scholarly, objective, and clearly explained. Avoid hyperbolic slang or informal buzzwords.
+3. Mathematical precision: clearly explain variables, algorithmic objectives, and optimization characteristics.
+4. Output MUST be strictly a single, valid JSON object matching the requested schema without any markdown wrapping or text outside the JSON.
 
 Expected JSON Structure:
 {
@@ -193,7 +202,7 @@ Perform a complete extraction of the paper's novel outputs, intuitive comparativ
       }
 
       const response = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
+        model: 'gemini-3.1-flash-lite',
         contents: contentParts,
         config: {
           systemInstruction: systemPrompt,
@@ -246,7 +255,7 @@ Provide:
 Be factual, accurate, and include real links to arXiv or official academic sources.`;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
+        model: 'gemini-3.1-flash-lite',
         contents: prompt,
         config: {
           tools: [{ googleSearch: {} }],
@@ -305,7 +314,7 @@ User Question: ${question}
 Answer clearly with high scientific accuracy, intuitive analogies where helpful, and actionable pointers. Use clean Markdown formatting.`;
 
       const response = await ai.models.generateContent({
-        model: 'gemini-3.8-flash',
+        model: 'gemini-3.1-flash-lite',
         contents: messagesPrompt,
       });
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, Users, Compass, Eye, BookOpen, Lightbulb, GraduationCap, Briefcase, Microscope } from 'lucide-react';
+import { Sparkles, Users, Eye, BookOpen, GraduationCap, Briefcase, Microscope, CheckCircle2 } from 'lucide-react';
 import { PaperAnalysisResult } from '../types';
 
 interface ComparativeAnalogyLabProps {
@@ -8,53 +8,53 @@ interface ComparativeAnalogyLabProps {
 
 export const ComparativeAnalogyLab: React.FC<ComparativeAnalogyLabProps> = ({ paperData }) => {
   const { comparativeAnalogies, simpleTermsExplanation } = paperData;
-  const [activePersona, setActivePersona] = useState<'student' | 'founder' | 'researcher'>('student');
+  const [activeAudience, setActiveAudience] = useState<'student' | 'engineer' | 'researcher'>('student');
 
   return (
-    <div className="w-full max-w-5xl mx-auto py-6 sm:py-10 px-4 space-y-8">
-      {/* Intro Hero */}
-      <div className="bg-gradient-to-br from-amber-500/10 via-amber-100/20 to-transparent rounded-3xl p-6 sm:p-10 border border-amber-200/80 shadow-xs relative overflow-hidden">
-        <div className="flex items-center space-x-2 text-xs font-bold text-amber-800 uppercase tracking-wider mb-3">
-          <Sparkles className="w-4 h-4 text-amber-600" />
-          <span>The Comparative Analogy Lab</span>
+    <div className="w-full max-w-5xl mx-auto py-6 px-4 space-y-8">
+      {/* Narrative Physical Metaphor */}
+      <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-4">
+        <div className="flex items-center space-x-2 text-xs font-bold text-slate-700 uppercase tracking-wider">
+          <BookOpen className="w-4 h-4 text-slate-600" />
+          <span>Everyday Mechanical Analogy</span>
         </div>
 
-        <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
           {comparativeAnalogies.everydayAnalogy.title}
         </h1>
 
-        <p className="text-slate-700 text-base sm:text-lg leading-relaxed mb-6 font-normal">
+        <p className="text-slate-700 text-sm sm:text-base leading-relaxed font-normal">
           {comparativeAnalogies.everydayAnalogy.narrative}
         </p>
 
-        {/* Intuition Takeaway */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-white/90 border border-amber-200 shadow-xs">
-          <span className="text-xs font-bold text-amber-800 uppercase tracking-wider block mb-1">
-            Intuition in One Breath
+        {/* Intuition Takeaway Callout */}
+        <div className="p-4 rounded-xl bg-slate-50 border border-slate-200">
+          <span className="text-xs font-bold text-slate-600 uppercase tracking-wider block mb-1">
+            Intuition in One Sentence
           </span>
-          <p className="text-base sm:text-lg font-bold text-slate-900 italic">
+          <p className="text-sm sm:text-base font-semibold text-slate-900 italic">
             "{comparativeAnalogies.intuitionTakeaway}"
           </p>
         </div>
       </div>
 
-      {/* Visual Mental Metaphor */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
-        <div className="flex items-center space-x-2 mb-3">
-          <Eye className="w-5 h-5 text-indigo-600" />
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">Mental Visual Metaphor</h2>
+      {/* Mental Visual Metaphor */}
+      <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-xs">
+        <div className="flex items-center space-x-2 mb-2">
+          <Eye className="w-4 h-4 text-slate-700" />
+          <h2 className="text-base font-bold text-slate-900">Mental Visual Metaphor</h2>
         </div>
-        <p className="text-slate-600 text-base sm:text-lg leading-relaxed italic border-l-4 border-indigo-600 pl-4 py-1">
+        <p className="text-slate-700 text-xs sm:text-sm leading-relaxed border-l-2 border-slate-900 pl-3.5 py-1 italic">
           {comparativeAnalogies.visualMetaphor}
         </p>
       </div>
 
-      {/* The Concept Cast: Technical Term -> Everyday Equivalent */}
+      {/* The Concept Cast: Technical Term -> Real-World Equivalent */}
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
-          <Users className="w-5 h-5 text-indigo-600" />
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-            The Concept Cast: Translation Matrix
+          <Users className="w-4 h-4 text-slate-700" />
+          <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+            Concept Translation Matrix
           </h2>
         </div>
 
@@ -62,20 +62,20 @@ export const ComparativeAnalogyLab: React.FC<ComparativeAnalogyLabProps> = ({ pa
           {comparativeAnalogies.everydayAnalogy.cast.map((item, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:border-amber-300 transition-all flex flex-col justify-between"
+              className="bg-white rounded-xl p-4 border border-slate-200 shadow-xs flex flex-col justify-between"
             >
               <div>
-                <span className="text-xs font-bold text-indigo-600 uppercase tracking-wider block mb-1">
-                  Technical Term
+                <span className="text-[11px] font-mono font-medium text-slate-400 block mb-1">
+                  Technical Concept
                 </span>
-                <h4 className="font-bold text-slate-900 text-base mb-3">{item.technicalTerm}</h4>
+                <h4 className="font-bold text-slate-900 text-sm mb-3">{item.technicalTerm}</h4>
               </div>
 
               <div className="pt-3 border-t border-slate-100">
-                <span className="text-xs font-bold text-amber-700 uppercase tracking-wider block mb-1">
-                  Real-World Role
+                <span className="text-[11px] font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                  Everyday Equivalent
                 </span>
-                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
+                <p className="text-xs text-slate-600 leading-relaxed">
                   {item.everydayEquivalent}
                 </p>
               </div>
@@ -84,48 +84,48 @@ export const ComparativeAnalogyLab: React.FC<ComparativeAnalogyLabProps> = ({ pa
         </div>
       </div>
 
-      {/* Simple Terms Explanation Tabs (3 Personas) */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-6">
+      {/* Multi-Tier Audience Explanations */}
+      <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-              Explain in Simple Terms
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+              Audience-Tailored Explanations
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500">
-              Adapted explanations tuned for different perspectives.
+            <p className="text-xs text-slate-500">
+              Select an expertise level to view the synthesized explanation formatted for that background.
             </p>
           </div>
 
-          <div className="flex items-center p-1 bg-slate-100 rounded-xl text-xs font-semibold">
+          <div className="flex items-center p-0.5 bg-slate-100 rounded-lg border border-slate-200 text-xs font-semibold">
             <button
-              onClick={() => setActivePersona('student')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
-                activePersona === 'student'
-                  ? 'bg-white text-indigo-700 shadow-xs font-bold'
+              onClick={() => setActiveAudience('student')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md transition-all ${
+                activeAudience === 'student'
+                  ? 'bg-white text-slate-900 shadow-xs font-bold'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <GraduationCap className="w-3.5 h-3.5" />
-              <span>Student (ELI15)</span>
+              <span>Undergraduate</span>
             </button>
 
             <button
-              onClick={() => setActivePersona('founder')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
-                activePersona === 'founder'
-                  ? 'bg-white text-indigo-700 shadow-xs font-bold'
+              onClick={() => setActiveAudience('engineer')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md transition-all ${
+                activeAudience === 'engineer'
+                  ? 'bg-white text-slate-900 shadow-xs font-bold'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
               <Briefcase className="w-3.5 h-3.5" />
-              <span>Tech Founder</span>
+              <span>Practitioner / Lead</span>
             </button>
 
             <button
-              onClick={() => setActivePersona('researcher')}
-              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-lg transition-all ${
-                activePersona === 'researcher'
-                  ? 'bg-white text-indigo-700 shadow-xs font-bold'
+              onClick={() => setActiveAudience('researcher')}
+              className={`flex items-center space-x-1.5 px-3 py-1.5 rounded-md transition-all ${
+                activeAudience === 'researcher'
+                  ? 'bg-white text-slate-900 shadow-xs font-bold'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >
@@ -135,35 +135,35 @@ export const ComparativeAnalogyLab: React.FC<ComparativeAnalogyLabProps> = ({ pa
           </div>
         </div>
 
-        <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-slate-800 leading-relaxed text-base">
-          {activePersona === 'student' && (
+        <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 leading-relaxed text-xs sm:text-sm">
+          {activeAudience === 'student' && (
             <div>
-              <div className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">
-                For High Schoolers & Beginners
+              <div className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                Undergraduate / Introductory Perspective (Core Concepts & Intuition)
               </div>
-              <p className="text-slate-700 font-normal leading-relaxed">
+              <p className="text-slate-700 leading-relaxed">
                 {simpleTermsExplanation.forHighSchooler}
               </p>
             </div>
           )}
 
-          {activePersona === 'founder' && (
+          {activeAudience === 'engineer' && (
             <div>
-              <div className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">
-                For Tech Founders & Product Leaders (ROI & Architecture)
+              <div className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                Practitioner Perspective (Throughput, Architecture & Implementation)
               </div>
-              <p className="text-slate-700 font-normal leading-relaxed">
+              <p className="text-slate-700 leading-relaxed">
                 {simpleTermsExplanation.forTechFounder}
               </p>
             </div>
           )}
 
-          {activePersona === 'researcher' && (
+          {activeAudience === 'researcher' && (
             <div>
-              <div className="text-xs font-bold text-indigo-600 uppercase tracking-wider mb-2">
-                For Senior ML Researchers (Asymptotics & Inductive Bias)
+              <div className="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                Senior Researcher Perspective (Inductive Biases, Optimization Landscapes & Asymptotics)
               </div>
-              <p className="text-slate-700 font-normal leading-relaxed">
+              <p className="text-slate-700 leading-relaxed">
                 {simpleTermsExplanation.forSeniorResearcher}
               </p>
             </div>

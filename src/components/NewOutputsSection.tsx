@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Cpu, Award, ArrowRight, CheckCircle, BarChart3, Clock, Layers } from 'lucide-react';
+import { Cpu, Award, ArrowRight, CheckCircle2, BarChart3, Layers, FileText } from 'lucide-react';
 import { PaperAnalysisResult } from '../types';
 
 interface NewOutputsSectionProps {
@@ -10,31 +10,28 @@ export const NewOutputsSection: React.FC<NewOutputsSectionProps> = ({ paperData 
   const { newOutputs, paperMeta } = paperData;
 
   return (
-    <div className="w-full max-w-5xl mx-auto py-6 sm:py-10 px-4 space-y-8">
-      {/* Header Banner */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
-        <div className="flex flex-wrap items-center gap-2 mb-3">
-          <span className="bg-indigo-50 text-indigo-700 text-xs font-bold px-3 py-1 rounded-full border border-indigo-100 flex items-center gap-1">
-            <Sparkles className="w-3.5 h-3.5 text-indigo-600" /> Novel Contributions
+    <div className="w-full max-w-5xl mx-auto py-6 px-4 space-y-8">
+      {/* Primary Breakthrough Banner */}
+      <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-4">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="bg-slate-100 text-slate-800 text-xs font-bold px-3 py-1 rounded border border-slate-200 uppercase tracking-wider">
+            Primary Scholarly Contribution
           </span>
-          <span className="bg-slate-100 text-slate-700 text-xs font-semibold px-3 py-1 rounded-full">
+          <span className="bg-slate-50 text-slate-600 text-xs font-medium px-2.5 py-1 rounded border border-slate-200">
             {paperMeta.domain}
-          </span>
-          <span className="text-xs text-slate-500 font-medium">
-            Published {paperMeta.year} • {paperMeta.journalOrConference || 'Preprint'}
           </span>
         </div>
 
-        <h1 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight mb-4">
-          {paperMeta.title}
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight leading-snug">
+          Methodological Innovations & Algorithmic Novelty
         </h1>
 
-        <div className="p-4 sm:p-5 rounded-2xl bg-indigo-50/70 border border-indigo-100/90 text-indigo-950">
-          <div className="flex items-center space-x-2 text-xs font-bold text-indigo-800 uppercase tracking-wider mb-1">
-            <Award className="w-4 h-4 text-indigo-600" />
-            <span>Primary Breakthrough & Central Novelty</span>
+        <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900">
+          <div className="flex items-center space-x-2 text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+            <Award className="w-4 h-4 text-slate-700" />
+            <span>Core Breakthrough Statement</span>
           </div>
-          <p className="text-base sm:text-lg font-semibold leading-relaxed text-indigo-950">
+          <p className="text-base sm:text-lg font-semibold leading-relaxed text-slate-900">
             {newOutputs.primaryBreakthrough}
           </p>
         </div>
@@ -43,9 +40,9 @@ export const NewOutputsSection: React.FC<NewOutputsSectionProps> = ({ paperData 
       {/* Novel Mechanisms Introduced */}
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
-          <Cpu className="w-5 h-5 text-indigo-600" />
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-            Novel Mathematical & Algorithmic Mechanisms
+          <Cpu className="w-5 h-5 text-slate-700" />
+          <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+            Detailed Algorithmic & Mathematical Mechanisms
           </h2>
         </div>
 
@@ -53,63 +50,74 @@ export const NewOutputsSection: React.FC<NewOutputsSectionProps> = ({ paperData 
           {newOutputs.novelMechanisms.map((mech, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:border-indigo-200 transition-all flex flex-col justify-between"
+              className="bg-white rounded-xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between"
             >
               <div>
-                <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center font-bold text-sm mb-3">
-                  0{idx + 1}
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-mono font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                    Mechanism 0{idx + 1}
+                  </span>
                 </div>
                 <h3 className="font-bold text-slate-900 text-base mb-2">{mech.name}</h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4 font-normal">
+                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed mb-4">
                   {mech.description}
                 </p>
               </div>
 
               <div className="pt-3 border-t border-slate-100">
-                <span className="text-xs font-bold text-indigo-600 block mb-1">Why It Matters:</span>
-                <p className="text-xs text-slate-600 italic leading-relaxed">{mech.whyItMatters}</p>
+                <span className="text-xs font-bold text-slate-700 uppercase tracking-wider block mb-1">
+                  Theoretical Significance:
+                </span>
+                <p className="text-xs text-slate-600 leading-relaxed">{mech.whyItMatters}</p>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Status Quo Before vs After (Side by Side) */}
+      {/* Status Quo Comparative Matrix: Before vs After */}
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
-          <Layers className="w-5 h-5 text-indigo-600" />
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-            Status Quo Paradigm Shift: Before vs. After
+          <Layers className="w-5 h-5 text-slate-700" />
+          <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+            Comparative Matrix: Status Quo vs. This Paper
           </h2>
         </div>
 
-        <div className="bg-white rounded-3xl border border-slate-200/80 shadow-xs overflow-hidden">
-          <div className="grid grid-cols-1 divide-y divide-slate-100">
+        <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+          <div className="hidden lg:grid grid-cols-12 bg-slate-50 p-3.5 border-b border-slate-200 text-xs font-bold uppercase tracking-wider text-slate-500">
+            <div className="col-span-3">Evaluated Dimension</div>
+            <div className="col-span-4">Conventional Baseline Paradigm</div>
+            <div className="col-span-1 text-center">Shift</div>
+            <div className="col-span-4">This Paper's Solution</div>
+          </div>
+
+          <div className="divide-y divide-slate-100">
             {newOutputs.statusQuoBeforeVsAfter.map((sq, idx) => (
               <div key={idx} className="p-5 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-4 items-center">
                 <div className="lg:col-span-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-1">
+                  <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block lg:hidden mb-1">
                     Dimension
                   </span>
-                  <span className="text-base font-bold text-slate-900">{sq.aspect}</span>
+                  <span className="text-sm font-bold text-slate-900">{sq.aspect}</span>
                 </div>
 
-                <div className="lg:col-span-4 p-4 rounded-xl bg-rose-50/70 border border-rose-100 text-rose-950">
-                  <span className="text-xs font-bold text-rose-700 uppercase tracking-wider block mb-1">
-                    Before This Paper
+                <div className="lg:col-span-4 p-3.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700">
+                  <span className="text-[11px] font-bold text-slate-600 uppercase tracking-wider block mb-1 lg:hidden">
+                    Prior State
                   </span>
-                  <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">{sq.before}</p>
+                  <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">{sq.before}</p>
                 </div>
 
                 <div className="hidden lg:flex lg:col-span-1 justify-center text-slate-400">
-                  <ArrowRight className="w-5 h-5 text-indigo-500" />
+                  <ArrowRight className="w-4 h-4 text-slate-600" />
                 </div>
 
-                <div className="lg:col-span-4 p-4 rounded-xl bg-emerald-50/70 border border-emerald-100 text-emerald-950">
-                  <span className="text-xs font-bold text-emerald-700 uppercase tracking-wider block mb-1">
-                    After This Paper
+                <div className="lg:col-span-4 p-3.5 rounded-lg bg-slate-100 border border-slate-300 text-slate-900">
+                  <span className="text-[11px] font-bold text-slate-800 uppercase tracking-wider block mb-1 lg:hidden">
+                    Advance Achieved
                   </span>
-                  <p className="text-xs sm:text-sm text-slate-800 font-medium leading-relaxed">
+                  <p className="text-xs sm:text-sm text-slate-900 font-medium leading-relaxed">
                     {sq.after}
                   </p>
                 </div>
@@ -119,12 +127,12 @@ export const NewOutputsSection: React.FC<NewOutputsSectionProps> = ({ paperData 
         </div>
       </div>
 
-      {/* Benchmark Results & Empirical Proof */}
+      {/* Benchmark Results */}
       <div className="space-y-4">
         <div className="flex items-center space-x-2">
-          <BarChart3 className="w-5 h-5 text-indigo-600" />
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-            Empirical Benchmark Beats & Performance Gains
+          <BarChart3 className="w-5 h-5 text-slate-700" />
+          <h2 className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
+            Empirical Evaluation & Performance Gains
           </h2>
         </div>
 
@@ -132,29 +140,27 @@ export const NewOutputsSection: React.FC<NewOutputsSectionProps> = ({ paperData 
           {newOutputs.benchmarkResults.map((res, idx) => (
             <div
               key={idx}
-              className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs flex flex-col justify-between"
+              className="bg-white rounded-xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between"
             >
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 block mb-1">
-                  Target Metric
+                <span className="text-xs font-mono text-slate-500 block mb-1">
+                  Metric {idx + 1}
                 </span>
-                <h4 className="font-bold text-slate-900 text-base mb-4">{res.metric}</h4>
+                <h4 className="font-bold text-slate-900 text-sm mb-3">{res.metric}</h4>
 
-                <div className="space-y-2 mb-4">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-slate-500">Prior Baseline:</span>
-                    <span className="font-mono font-medium text-slate-700">{res.priorState}</span>
+                <div className="space-y-2 mb-3">
+                  <div className="flex justify-between items-center text-xs text-slate-500">
+                    <span>Baseline Score:</span>
+                    <span className="font-mono text-slate-700">{res.priorState}</span>
                   </div>
-                  <div className="flex justify-between items-center text-xs p-2 rounded-lg bg-emerald-50 text-emerald-900 font-semibold border border-emerald-100">
-                    <span>This Paper:</span>
-                    <span className="font-mono text-emerald-700 font-bold text-sm">
-                      {res.thisPaper}
-                    </span>
+                  <div className="flex justify-between items-center text-xs p-2 rounded bg-slate-50 border border-slate-200 font-semibold text-slate-900">
+                    <span>Achieved Score:</span>
+                    <span className="font-mono font-bold">{res.thisPaper}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="text-xs text-indigo-700 font-semibold bg-indigo-50/60 p-2.5 rounded-xl border border-indigo-100/60">
+              <div className="text-xs font-semibold text-slate-800 bg-slate-100 p-2.5 rounded border border-slate-200">
                 {res.impact}
               </div>
             </div>
@@ -162,19 +168,17 @@ export const NewOutputsSection: React.FC<NewOutputsSectionProps> = ({ paperData 
         </div>
       </div>
 
-      {/* Key Findings Bullet List */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs space-y-4">
-        <h3 className="text-lg font-bold text-slate-900">Summary of Key Verified Findings</h3>
-        <div className="space-y-3">
+      {/* Key Verified Findings */}
+      <div className="bg-white rounded-xl p-6 border border-slate-200 shadow-xs space-y-3">
+        <h3 className="text-base font-bold text-slate-900">Summary of Key Verified Findings</h3>
+        <ul className="space-y-2.5">
           {newOutputs.keyFindings.map((finding, idx) => (
-            <div key={idx} className="flex items-start space-x-3">
-              <CheckCircle className="w-5 h-5 text-indigo-600 shrink-0 mt-0.5" />
-              <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
-                {finding}
-              </p>
-            </div>
+            <li key={idx} className="flex items-start space-x-2.5 text-xs sm:text-sm text-slate-700">
+              <CheckCircle2 className="w-4 h-4 text-slate-500 shrink-0 mt-0.5" />
+              <span className="leading-relaxed">{finding}</span>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </div>
   );

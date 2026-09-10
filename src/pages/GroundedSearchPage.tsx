@@ -3,14 +3,11 @@ import { Link } from 'react-router-dom';
 import {
   Search,
   BookOpen,
-  Sparkles,
   ExternalLink,
-  RefreshCw,
   AlertCircle,
   FileText,
-  Upload,
   ArrowRight,
-  TrendingUp,
+  Sparkles,
 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
@@ -23,10 +20,10 @@ export const GroundedSearchPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const sampleQueries = [
-    'State space models vs Transformers (Mamba, RWKV)',
-    'Direct Preference Optimization vs RLHF recent results',
-    'Post-training quantizations for LLMs (AWQ, GPTQ, BitNet)',
-    'Test-time compute and reasoning models (o1, DeepSeek-R1)',
+    'State Space Models vs Transformers (Mamba, RWKV-6)',
+    'Direct Preference Optimization vs RLHF empirical results',
+    'Post-training quantization for LLMs (AWQ, GPTQ, BitNet)',
+    'Test-time compute and reasoning models (DeepSeek-R1, OpenAI o1)',
     'Diffusion Transformers (DiT) in video generation',
   ];
 
@@ -69,37 +66,33 @@ export const GroundedSearchPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto">
-        {/* Breadcrumb & Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-2 text-xs text-slate-500 mb-2">
-            <Link to="/" className="hover:text-indigo-600 transition-colors">
-              Home
-            </Link>
-            <span>/</span>
-            <span className="text-slate-900 font-medium">Grounded Literature Search</span>
-          </div>
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                Live Grounded Academic Literature Search
-              </h1>
-              <p className="mt-1 text-sm text-slate-600">
-                Discover real existing research papers, citations, and recent 2024-2026 buzz verified through Google Search Grounding.
-              </p>
+      <div className="max-w-4xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center space-x-2 text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
+              <BookOpen className="w-4 h-4 text-slate-600" />
+              <span>Grounded Academic Search</span>
             </div>
-            <Link
-              to="/upload"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs shrink-0 self-start sm:self-center"
-            >
-              <Upload className="w-3.5 h-3.5" />
-              <span>Upload PDF Instead</span>
-            </Link>
+            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
+              Scholarly Literature & Citation Discovery
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-600 mt-1">
+              Query real peer-reviewed publications, arXiv preprints, and recent developments verified through Google Search Grounding.
+            </p>
           </div>
+
+          <Link
+            to="/analysis"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-slate-900 hover:bg-slate-800 text-white font-semibold text-xs shadow-xs shrink-0 self-start sm:self-center"
+          >
+            <FileText className="w-3.5 h-3.5" />
+            <span>Open Paper Workspace</span>
+          </Link>
         </div>
 
         {/* Search Bar Box */}
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 mb-8">
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 space-y-4">
           <form
             onSubmit={(e) => {
               e.preventDefault();
@@ -118,7 +111,7 @@ export const GroundedSearchPage: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="e.g. FlashAttention-3 or 'Reasoning through search in LLMs'..."
-                  className="w-full text-xs pl-10 pr-24 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 bg-slate-50/50"
+                  className="w-full text-xs pl-10 pr-28 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white"
                 />
                 <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <button
@@ -126,8 +119,8 @@ export const GroundedSearchPage: React.FC = () => {
                   disabled={isLoading || !searchQuery.trim()}
                   className={`absolute right-1.5 top-1.5 px-4 py-2 rounded-lg text-xs font-bold text-white transition-all ${
                     isLoading || !searchQuery.trim()
-                      ? 'bg-slate-300 cursor-not-allowed'
-                      : 'bg-indigo-600 hover:bg-indigo-700'
+                      ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                      : 'bg-slate-900 hover:bg-slate-800 active:scale-98'
                   }`}
                 >
                   {isLoading ? 'Searching...' : 'Search'}
@@ -137,8 +130,8 @@ export const GroundedSearchPage: React.FC = () => {
 
             {/* Quick suggested queries */}
             <div>
-              <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block mb-2">
-                Suggested Academic Frontiers:
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block mb-2">
+                Sample Research Queries:
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {sampleQueries.map((query, idx) => (
@@ -149,7 +142,7 @@ export const GroundedSearchPage: React.FC = () => {
                       setSearchQuery(query);
                       handleSearch(query);
                     }}
-                    className="text-[11px] px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-indigo-50 hover:text-indigo-700 text-slate-600 transition-colors border border-slate-200/60"
+                    className="text-xs bg-slate-50 hover:bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg border border-slate-200 transition-colors font-medium text-left"
                   >
                     {query}
                   </button>
@@ -157,71 +150,69 @@ export const GroundedSearchPage: React.FC = () => {
               </div>
             </div>
           </form>
-
-          {errorMessage && (
-            <div className="mt-5 p-4 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800 flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
-              <span>{errorMessage}</span>
-            </div>
-          )}
-
-          {isLoading && (
-            <div className="mt-6 p-6 bg-indigo-50/60 border border-indigo-100 rounded-xl text-center">
-              <RefreshCw className="w-6 h-6 text-indigo-600 animate-spin mx-auto mb-2" />
-              <p className="text-xs font-bold text-slate-800">
-                Grounded Google Search in Progress...
-              </p>
-              <p className="text-[11px] text-slate-500 mt-0.5">
-                Gemini 3.8 Flash is verifying publications, retrieving citations, and compiling recent trends.
-              </p>
-            </div>
-          )}
         </div>
 
-        {/* Results Area */}
-        {reportMarkdown && (
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 space-y-6">
-            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-indigo-600" />
-                <h3 className="text-base font-bold text-slate-900">
-                  Grounded Synthesis & Verified Literature
-                </h3>
+        {/* Error Message */}
+        {errorMessage && (
+          <div className="p-4 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-start gap-2">
+            <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+            <span>{errorMessage}</span>
+          </div>
+        )}
+
+        {/* Loading Indicator */}
+        {isLoading && (
+          <div className="p-8 text-center bg-white rounded-2xl border border-slate-200 shadow-xs space-y-3">
+            <div className="w-6 h-6 border-2 border-slate-900 border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-xs font-semibold text-slate-900">
+              Retrieving grounded scholarly publications and citations...
+            </p>
+            <p className="text-[11px] text-slate-500">
+              Powered by Google Search Grounding with Gemini 3.1 Flash-Lite
+            </p>
+          </div>
+        )}
+
+        {/* Results Report */}
+        {reportMarkdown && !isLoading && (
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl border border-slate-200 shadow-xs p-6 sm:p-8 space-y-6">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                  Grounded Synthesis Report
+                </span>
+                <span className="text-xs font-mono text-slate-400">
+                  {sources.length} Grounded References
+                </span>
               </div>
-              <span className="text-[11px] bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-full font-semibold">
-                Google Grounded
-              </span>
-            </div>
 
-            {/* Markdown Content */}
-            <div className="prose prose-sm max-w-none text-slate-700 leading-relaxed text-xs space-y-3">
-              <ReactMarkdown>{reportMarkdown}</ReactMarkdown>
-            </div>
+              <div className="prose prose-sm max-w-none text-slate-800 leading-relaxed">
+                <ReactMarkdown>{reportMarkdown}</ReactMarkdown>
+              </div>
 
-            {/* Grounded Web Sources */}
-            {sources.length > 0 && (
-              <div className="pt-6 border-t border-slate-100">
-                <h4 className="text-xs font-bold text-slate-900 mb-3 uppercase tracking-wider flex items-center gap-1.5">
-                  <ExternalLink className="w-3.5 h-3.5 text-indigo-600" /> Verified Grounded Web Citations ({sources.length})
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {sources.map((src, i) => (
-                    <a
-                      key={i}
-                      href={src.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="p-3 bg-slate-50 hover:bg-indigo-50/50 rounded-xl border border-slate-200 transition-colors flex items-start justify-between gap-2 group"
-                    >
-                      <span className="text-xs font-medium text-slate-800 group-hover:text-indigo-600 line-clamp-2">
-                        {src.title}
-                      </span>
-                      <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-600 shrink-0 mt-0.5" />
-                    </a>
-                  ))}
+              {/* Verified Sources List */}
+              {sources.length > 0 && (
+                <div className="pt-6 border-t border-slate-100 space-y-3">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                    Verified Google Grounding Citations
+                  </h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {sources.map((src, sIdx) => (
+                      <a
+                        key={sIdx}
+                        href={src.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center justify-between p-3 rounded-lg border border-slate-200 bg-slate-50 hover:bg-white text-xs font-medium text-slate-800 transition-colors"
+                      >
+                        <span className="truncate mr-2">{src.title || src.url}</span>
+                        <ExternalLink className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      </a>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         )}
       </div>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Rocket, Target, HelpCircle, Briefcase, AlertOctagon, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Target, HelpCircle, Briefcase, AlertOctagon, CheckCircle2, Compass } from 'lucide-react';
 import { PaperAnalysisResult, ThesisTopic } from '../types';
 
 interface FutureScopeSectionProps {
@@ -12,139 +12,138 @@ export const FutureScopeSection: React.FC<FutureScopeSectionProps> = ({ paperDat
   const getDifficultyBadge = (difficulty: ThesisTopic['difficulty']) => {
     switch (difficulty) {
       case 'Medium':
-        return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+        return 'bg-slate-100 text-slate-800 border-slate-200';
       case 'High':
-        return 'bg-amber-50 text-amber-800 border-amber-200';
+        return 'bg-slate-200 text-slate-900 border-slate-300 font-bold';
       case 'Moonshot':
-        return 'bg-purple-50 text-purple-700 border-purple-200';
+        return 'bg-slate-900 text-white border-slate-900 font-bold';
       default:
-        return 'bg-slate-100 text-slate-700 border-slate-200';
+        return 'bg-slate-50 text-slate-700 border-slate-200';
     }
   };
 
   return (
-    <div className="w-full max-w-5xl mx-auto py-6 sm:py-10 px-4 space-y-8">
+    <div className="w-full max-w-5xl mx-auto py-6 px-4 space-y-8">
       {/* Header Banner */}
-      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/80 shadow-xs">
-        <div className="flex items-center space-x-2 text-xs font-bold text-fuchsia-700 uppercase tracking-wider mb-2">
-          <Rocket className="w-4 h-4 text-fuchsia-600" />
-          <span>Research Frontiers</span>
+      <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-2">
+        <div className="flex items-center space-x-2 text-xs font-bold text-slate-700 uppercase tracking-wider">
+          <Compass className="w-4 h-4 text-slate-600" />
+          <span>Research Agenda</span>
         </div>
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-          Scope of Research & Future Work
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          Methodological Limitations & Future Research Scope
         </h1>
-        <p className="text-sm sm:text-base text-slate-600 mt-2 leading-relaxed">
-          Open failure modes, high-impact thesis topics, and commercial application opportunities branching off "{paperMeta.title}".
+        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+          Open failure modes, concrete thesis proposals, and translational opportunities branching off "{paperMeta.title}".
         </p>
       </div>
 
-      {/* Promising Thesis & Project Topics */}
-      <div className="space-y-4">
-        <div className="flex items-center space-x-2">
-          <Target className="w-5 h-5 text-indigo-600" />
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-            Curated Thesis & High-Impact Project Topics
-          </h2>
-        </div>
+      {/* Unsolved Limitations & Bottlenecks */}
+      {futureScope.unsolvedLimitations && futureScope.unsolvedLimitations.length > 0 && (
+        <div className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-4">
+          <div className="flex items-center space-x-2">
+            <AlertOctagon className="w-4 h-4 text-slate-700" />
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+              Methodological Limitations & Failure Modes
+            </h2>
+          </div>
+          <p className="text-xs text-slate-500">
+            Identified structural constraints where the paper's assumptions or empirical methods encounter boundaries:
+          </p>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {futureScope.promisingThesisTopics.map((topic, idx) => (
-            <div
-              key={idx}
-              className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs hover:border-fuchsia-200 transition-all flex flex-col justify-between"
-            >
-              <div>
-                <div className="flex items-center justify-between mb-3">
-                  <span className="text-xs font-bold text-slate-500 font-mono">Topic 0{idx + 1}</span>
-                  <span
-                    className={`text-xs font-bold px-2.5 py-0.5 rounded-full border ${getDifficultyBadge(
-                      topic.difficulty
-                    )}`}
-                  >
-                    {topic.difficulty}
-                  </span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+            {futureScope.unsolvedLimitations.map((lim, idx) => (
+              <div key={idx} className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <span className="text-[11px] font-mono text-slate-500">Constraint 0{idx + 1}</span>
+                <p className="text-xs sm:text-sm text-slate-800 leading-relaxed font-normal">{lim}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Promising Thesis Proposals */}
+      {futureScope.promisingThesisTopics && futureScope.promisingThesisTopics.length > 0 && (
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <Target className="w-4 h-4 text-slate-700" />
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+              Curated Thesis & Graduate Research Proposals
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {futureScope.promisingThesisTopics.map((topic, idx) => (
+              <div
+                key={idx}
+                className="bg-white rounded-xl p-5 border border-slate-200 shadow-xs flex flex-col justify-between"
+              >
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <span className="text-xs font-mono font-bold text-slate-500">
+                      Proposal 0{idx + 1}
+                    </span>
+                    <span
+                      className={`text-[10px] font-medium px-2 py-0.5 rounded border ${getDifficultyBadge(
+                        topic.difficulty
+                      )}`}
+                    >
+                      {topic.difficulty} Complexity
+                    </span>
+                  </div>
+
+                  <h3 className="font-bold text-slate-900 text-sm mb-2">{topic.title}</h3>
+                  <p className="text-xs text-slate-600 leading-relaxed">
+                    {topic.description}
+                  </p>
                 </div>
-                <h3 className="font-bold text-slate-900 text-base mb-2 leading-snug">
-                  {topic.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
-                  {topic.description}
-                </p>
               </div>
-
-              <div className="pt-4 mt-4 border-t border-slate-100 flex items-center text-xs font-semibold text-indigo-600">
-                <span>Ready for exploration →</span>
-              </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
-
-      {/* Unsolved Bottlenecks & Failure Modes */}
-      <div className="space-y-4">
-        <div className="flex items-center space-x-2">
-          <AlertOctagon className="w-5 h-5 text-rose-600" />
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-            Unsolved Limitations & Known Failure Modes
-          </h2>
-        </div>
-
-        <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-3">
-          {futureScope.unsolvedLimitations.map((lim, idx) => (
-            <div key={idx} className="flex items-start space-x-3">
-              <div className="w-5 h-5 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 text-xs font-bold mt-0.5">
-                ✕
-              </div>
-              <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
-                {lim}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
 
       {/* Open Questions for the Field */}
-      <div className="space-y-4">
-        <div className="flex items-center space-x-2">
-          <HelpCircle className="w-5 h-5 text-indigo-600" />
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-            Profound Open Questions for the Field
-          </h2>
+      {futureScope.openQuestionsForField && futureScope.openQuestionsForField.length > 0 && (
+        <div className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-4">
+          <div className="flex items-center space-x-2">
+            <HelpCircle className="w-4 h-4 text-slate-700" />
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+              Fundamental Open Research Questions
+            </h2>
+          </div>
+          <ul className="space-y-3">
+            {futureScope.openQuestionsForField.map((q, idx) => (
+              <li key={idx} className="flex items-start space-x-3 text-xs sm:text-sm text-slate-700">
+                <span className="font-mono text-xs font-bold text-slate-500 shrink-0 mt-0.5">
+                  Q{idx + 1}.
+                </span>
+                <span className="leading-relaxed font-normal">{q}</span>
+              </li>
+            ))}
+          </ul>
         </div>
+      )}
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {futureScope.openQuestionsForField.map((q, idx) => (
-            <div
-              key={idx}
-              className="bg-white rounded-2xl p-5 border border-slate-200/80 shadow-xs flex items-start space-x-3"
-            >
-              <Sparkles className="w-4 h-4 text-indigo-600 shrink-0 mt-1" />
-              <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed">{q}</p>
-            </div>
-          ))}
+      {/* Applied Industry & Practical Opportunities */}
+      {futureScope.industryApplicationOpportunities && futureScope.industryApplicationOpportunities.length > 0 && (
+        <div className="bg-white rounded-xl p-6 sm:p-8 border border-slate-200 shadow-xs space-y-4">
+          <div className="flex items-center space-x-2">
+            <Briefcase className="w-4 h-4 text-slate-700" />
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight">
+              Translational & Systems Opportunities
+            </h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {futureScope.industryApplicationOpportunities.map((opp, idx) => (
+              <div key={idx} className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-start gap-2.5">
+                <CheckCircle2 className="w-4 h-4 text-slate-700 shrink-0 mt-0.5" />
+                <p className="text-xs sm:text-sm text-slate-800 leading-relaxed font-normal">{opp}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-
-      {/* Commercial & Industry Application Opportunities */}
-      <div className="space-y-4">
-        <div className="flex items-center space-x-2">
-          <Briefcase className="w-5 h-5 text-indigo-600" />
-          <h2 className="text-xl font-bold text-slate-900 tracking-tight">
-            Commercial & Startup Application Frontiers
-          </h2>
-        </div>
-
-        <div className="bg-white rounded-3xl p-6 border border-slate-200/80 shadow-xs space-y-3">
-          {futureScope.industryApplicationOpportunities.map((opp, idx) => (
-            <div key={idx} className="flex items-start space-x-3">
-              <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-              <p className="text-sm sm:text-base text-slate-700 leading-relaxed font-normal">
-                {opp}
-              </p>
-            </div>
-          ))}
-        </div>
-      </div>
+      )}
     </div>
   );
 };
