@@ -1,0 +1,6 @@
+{
+  "name": "PaperPulse - Research Paper Analyzer",
+  "description": "Production research paper analyzer deconstructing PDFs into novel outputs, comparative analogies, verified related citations, community buzz, and a bite-sized doomscroll feed using Gemini 3.8 Flash.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
