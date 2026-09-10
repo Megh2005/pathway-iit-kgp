@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Upload,
   FileText,
@@ -6,18 +7,16 @@ import {
   BookOpen,
   ArrowRight,
   AlertCircle,
-  Sparkles,
-  CheckCircle2,
   FileUp,
   Clock,
   Layers,
   ShieldCheck,
+  CheckCircle2,
 } from 'lucide-react';
 import { usePaper } from '../context/PaperContext';
 
 interface PaperIngestionConsoleProps {
   onAnalysisSuccess?: () => void;
-  compact?: boolean;
 }
 
 const LANDMARK_PAPERS = [
@@ -27,15 +26,17 @@ const LANDMARK_PAPERS = [
     year: '2017',
     venue: 'NeurIPS',
     domain: 'Transformer Architecture / NLP',
-    query: 'Attention Is All You Need (Vaswani et al., 2017) introducing the Transformer architecture with self-attention mechanism replacing RNNs and CNNs for sequence-to-sequence modeling.',
+    query:
+      'Attention Is All You Need (Vaswani et al., 2017) introducing the Transformer architecture with self-attention mechanism replacing recurrence and convolutions for sequence-to-sequence modeling.',
   },
   {
-    title: 'FlashAttention: Fast & Memory-Efficient Exact Attention',
+    title: 'FlashAttention: Fast and Memory-Efficient Exact Attention',
     authors: 'Tri Dao, Daniel Y. Fu, Stefano Ermon, et al. (Stanford)',
     year: '2022',
     venue: 'NeurIPS',
     domain: 'Systems & GPU Hardware Optimization',
-    query: 'FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness by Tri Dao et al. 2022. Tiling attention computation to reduce GPU HBM to SRAM memory access.',
+    query:
+      'FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness by Tri Dao et al. 2022. Tiling attention computation to reduce GPU HBM to SRAM memory access.',
   },
   {
     title: 'DeepSeek-R1: Incentivizing Reasoning in LLMs via RL',
@@ -43,7 +44,8 @@ const LANDMARK_PAPERS = [
     year: '2025',
     venue: 'arXiv Preprint',
     domain: 'Reinforcement Learning & Reasoning',
-    query: 'DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning by DeepSeek-AI, 2025. Pure reinforcement learning without supervised warm-up.',
+    query:
+      'DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning by DeepSeek-AI, 2025. Pure reinforcement learning without supervised warm-up.',
   },
   {
     title: 'LoRA: Low-Rank Adaptation of Large Language Models',
@@ -51,14 +53,15 @@ const LANDMARK_PAPERS = [
     year: '2021',
     venue: 'ICLR',
     domain: 'Parameter-Efficient Fine-Tuning',
-    query: 'LoRA: Low-Rank Adaptation of Large Language Models by Edward J. Hu et al. 2021. Decomposing weight updates into low-rank matrices to freeze pre-trained weights.',
+    query:
+      'LoRA: Low-Rank Adaptation of Large Language Models by Edward J. Hu et al. 2021. Decomposing weight updates into low-rank matrices to freeze pre-trained weights.',
   },
 ];
 
 export const PaperIngestionConsole: React.FC<PaperIngestionConsoleProps> = ({
   onAnalysisSuccess,
-  compact = false,
 }) => {
+  const navigate = useNavigate();
   const { setCurrentPaper, isAnalyzing, setIsAnalyzing, analysisStep, setAnalysisStep } = usePaper();
 
   const [inputMode, setInputMode] = useState<'pdf' | 'title' | 'text'>('pdf');
@@ -187,6 +190,8 @@ export const PaperIngestionConsole: React.FC<PaperIngestionConsoleProps> = ({
         if (onAnalysisSuccess) {
           onAnalysisSuccess();
         }
+        // Direct navigation to the Analysis Screen on completion!
+        navigate('/analysis');
       } else {
         throw new Error('Analysis completed but the scholarly dossier structure was incomplete.');
       }
@@ -198,7 +203,7 @@ export const PaperIngestionConsole: React.FC<PaperIngestionConsoleProps> = ({
     }
   };
 
-  const handleLandmarkSelect = (paper: typeof LANDMARK_PAPERS[0]) => {
+  const handleLandmarkSelect = (paper: (typeof LANDMARK_PAPERS)[0]) => {
     setPaperTitle(paper.title);
     runAnalysis({
       paperTitle: paper.title,
@@ -207,33 +212,34 @@ export const PaperIngestionConsole: React.FC<PaperIngestionConsoleProps> = ({
   };
 
   return (
-    <div className={`w-full ${compact ? '' : 'max-w-4xl mx-auto py-6'}`}>
+    <div className="w-full max-w-4xl mx-auto py-6">
       <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
         {/* Console Header */}
-        <div className="p-6 sm:p-8 border-b border-slate-200/80 bg-slate-50/50">
+        <div className="p-6 sm:p-8 border-b border-slate-200 bg-slate-50">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="flex items-center space-x-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-slate-700 bg-white px-2.5 py-0.5 rounded border border-slate-200">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-800 bg-white px-2.5 py-0.5 rounded border border-slate-200">
                   Manuscript Ingestion
                 </span>
                 <span className="text-xs text-slate-500 font-medium">
                   Gemini 3.1 Flash-Lite Engine
                 </span>
               </div>
-              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight mt-1.5">
+              <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight mt-2">
                 Analyze Academic Research Paper
-              </h2>
+              </h1>
               <p className="text-xs sm:text-sm text-slate-600 mt-1">
-                Provide a PDF document, paper title, arXiv identifier, or raw text to generate an authoritative executive research dossier.
+                Upload an academic PDF, supply a title/arXiv identifier, or paste text to generate a comprehensive scholarly dossier.
               </p>
             </div>
           </div>
 
           {/* Mode Selector Tabs */}
-          <div className="flex items-center space-x-2 mt-6 p-1 bg-slate-200/70 rounded-xl max-w-md text-xs font-semibold text-slate-600">
+          <div className="flex items-center space-x-2 mt-6 p-1 bg-slate-200/80 rounded-xl max-w-md text-xs font-semibold text-slate-700">
             <button
               onClick={() => setInputMode('pdf')}
+              disabled={isAnalyzing}
               className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg transition-all ${
                 inputMode === 'pdf'
                   ? 'bg-white text-slate-900 shadow-xs font-bold'
@@ -246,6 +252,7 @@ export const PaperIngestionConsole: React.FC<PaperIngestionConsoleProps> = ({
 
             <button
               onClick={() => setInputMode('title')}
+              disabled={isAnalyzing}
               className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg transition-all ${
                 inputMode === 'title'
                   ? 'bg-white text-slate-900 shadow-xs font-bold'
@@ -258,6 +265,7 @@ export const PaperIngestionConsole: React.FC<PaperIngestionConsoleProps> = ({
 
             <button
               onClick={() => setInputMode('text')}
+              disabled={isAnalyzing}
               className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-lg transition-all ${
                 inputMode === 'text'
                   ? 'bg-white text-slate-900 shadow-xs font-bold'
@@ -279,8 +287,27 @@ export const PaperIngestionConsole: React.FC<PaperIngestionConsoleProps> = ({
             </div>
           )}
 
+          {/* Loading Progress State */}
+          {isAnalyzing && (
+            <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200 text-center space-y-4">
+              <div className="w-8 h-8 border-3 border-slate-900 border-t-transparent rounded-full animate-spin mx-auto" />
+              <div className="space-y-1">
+                <h3 className="text-sm font-bold text-slate-900">
+                  Synthesizing Manuscript with Gemini 3.1 Flash-Lite
+                </h3>
+                <p className="text-xs text-slate-600 font-medium">{analysisStep}</p>
+              </div>
+              <div className="w-full max-w-md mx-auto bg-slate-200 rounded-full h-1.5 overflow-hidden">
+                <div className="bg-slate-900 h-1.5 rounded-full animate-pulse w-3/4" />
+              </div>
+              <p className="text-[11px] text-slate-400">
+                Evaluating methodology, benchmark comparisons, verified citations, and intuitive analogies...
+              </p>
+            </div>
+          )}
+
           {/* Mode 1: PDF Upload */}
-          {inputMode === 'pdf' && (
+          {!isAnalyzing && inputMode === 'pdf' && (
             <div className="space-y-4">
               <div
                 onDragOver={(e) => {
@@ -290,9 +317,9 @@ export const PaperIngestionConsole: React.FC<PaperIngestionConsoleProps> = ({
                 onDragLeave={() => setIsDragOver(false)}
                 onDrop={handleDrop}
                 onClick={() => fileInputRef.current?.click()}
-                className={`border-2 border-dashed rounded-2xl p-8 sm:p-10 text-center cursor-pointer transition-all ${
+                className={`border-2 border-dashed rounded-2xl p-8 sm:p-12 text-center cursor-pointer transition-all ${
                   isDragOver
-                    ? 'border-slate-800 bg-slate-100'
+                    ? 'border-slate-900 bg-slate-100'
                     : 'border-slate-300 hover:border-slate-400 bg-slate-50/50 hover:bg-slate-50'
                 }`}
               >
@@ -315,16 +342,16 @@ export const PaperIngestionConsole: React.FC<PaperIngestionConsoleProps> = ({
                       {(selectedFile.size / (1024 * 1024)).toFixed(2)} MB &bull; Ready for analysis
                     </p>
                     <span className="inline-block mt-2 text-xs text-slate-600 underline">
-                      Click to choose a different PDF
+                      Click to choose a different PDF file
                     </span>
                   </div>
                 ) : (
                   <div className="space-y-2">
                     <p className="text-sm font-bold text-slate-900">
-                      Drop research paper PDF here, or click to browse
+                      Drop research paper PDF here, or click to browse files
                     </p>
                     <p className="text-xs text-slate-500">
-                      Supports full academic manuscripts, preprint PDFs, and conference proceedings up to 60MB
+                      Supports complete academic manuscripts, arXiv preprints, and conference proceedings up to 60MB
                     </p>
                   </div>
                 )}
@@ -333,7 +360,7 @@ export const PaperIngestionConsole: React.FC<PaperIngestionConsoleProps> = ({
               {selectedFile && (
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Paper Title or Inferred Header (Optional)
+                    Manuscript Title (Optional)
                   </label>
                   <input
                     type="text"
@@ -348,7 +375,7 @@ export const PaperIngestionConsole: React.FC<PaperIngestionConsoleProps> = ({
           )}
 
           {/* Mode 2: Title or arXiv ID */}
-          {inputMode === 'title' && (
+          {!isAnalyzing && inputMode === 'title' && (
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1.5">
@@ -359,7 +386,7 @@ export const PaperIngestionConsole: React.FC<PaperIngestionConsoleProps> = ({
                     type="text"
                     value={paperTitle}
                     onChange={(e) => setPaperTitle(e.target.value)}
-                    placeholder="e.g. arXiv:1706.03762 or Attention Is All You Need"
+                    placeholder="e.g. arXiv:1706.03762 or 'Attention Is All You Need'"
                     className="w-full pl-10 pr-4 py-3 text-xs rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-slate-900 bg-white"
                   />
                   <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
@@ -372,7 +399,7 @@ export const PaperIngestionConsole: React.FC<PaperIngestionConsoleProps> = ({
           )}
 
           {/* Mode 3: Paste Text */}
-          {inputMode === 'text' && (
+          {!isAnalyzing && inputMode === 'text' && (
             <div className="space-y-4">
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1.5">
@@ -402,70 +429,67 @@ export const PaperIngestionConsole: React.FC<PaperIngestionConsoleProps> = ({
             </div>
           )}
 
-          {/* Execution Button */}
-          <div>
-            <button
-              onClick={() => runAnalysis()}
-              disabled={
-                isAnalyzing ||
-                (inputMode === 'pdf' && !selectedFile) ||
-                (inputMode === 'title' && !paperTitle.trim()) ||
-                (inputMode === 'text' && !textContent.trim())
-              }
-              className={`w-full py-3.5 px-6 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all ${
-                isAnalyzing ||
-                (inputMode === 'pdf' && !selectedFile) ||
-                (inputMode === 'title' && !paperTitle.trim()) ||
-                (inputMode === 'text' && !textContent.trim())
-                  ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                  : 'bg-slate-900 hover:bg-slate-800 text-white shadow-sm active:scale-98'
-              }`}
-            >
-              <FileText className="w-4 h-4" />
-              <span>
-                {isAnalyzing
-                  ? 'Conducting Academic Analysis...'
-                  : 'Analyze Manuscript with Gemini 3.1 Flash-Lite'}
-              </span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+          {/* Primary Execution Button */}
+          {!isAnalyzing && (
+            <div>
+              <button
+                onClick={() => runAnalysis()}
+                disabled={
+                  (inputMode === 'pdf' && !selectedFile) ||
+                  (inputMode === 'title' && !paperTitle.trim()) ||
+                  (inputMode === 'text' && !textContent.trim())
+                }
+                className={`w-full py-3.5 px-6 rounded-xl font-bold text-xs flex items-center justify-center gap-2 transition-all ${
+                  (inputMode === 'pdf' && !selectedFile) ||
+                  (inputMode === 'title' && !paperTitle.trim()) ||
+                  (inputMode === 'text' && !textContent.trim())
+                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
+                    : 'bg-slate-900 hover:bg-slate-800 text-white shadow-sm active:scale-98'
+                }`}
+              >
+                <FileText className="w-4 h-4" />
+                <span>Analyze Manuscript with Gemini 3.1 Flash-Lite</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
 
           {/* Featured Landmark Papers (1-Click Evaluation) */}
-          <div className="pt-6 border-t border-slate-200/80">
-            <div className="flex items-center justify-between mb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-600">
-                Or Quickly Evaluate a Landmark Paper
-              </span>
-              <span className="text-[11px] text-slate-400">1-click full synthesis</span>
-            </div>
+          {!isAnalyzing && (
+            <div className="pt-6 border-t border-slate-200">
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                  Or Evaluate a Landmark Paper Immediately
+                </span>
+                <span className="text-[11px] text-slate-500">1-click full synthesis</span>
+              </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {LANDMARK_PAPERS.map((paper, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => handleLandmarkSelect(paper)}
-                  disabled={isAnalyzing}
-                  className="text-left p-3.5 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-slate-300 hover:shadow-xs transition-all group disabled:opacity-50"
-                >
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-[10px] font-bold text-slate-700 bg-white px-2 py-0.5 rounded border border-slate-200">
-                      {paper.venue} &bull; {paper.year}
-                    </span>
-                    <span className="text-[10px] text-slate-400 font-mono">
-                      {paper.domain.split('/')[0]}
-                    </span>
-                  </div>
-                  <h4 className="text-xs font-bold text-slate-900 group-hover:text-slate-800 line-clamp-1">
-                    {paper.title}
-                  </h4>
-                  <p className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
-                    {paper.authors}
-                  </p>
-                </button>
-              ))}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {LANDMARK_PAPERS.map((paper, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => handleLandmarkSelect(paper)}
+                    className="text-left p-4 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-white hover:border-slate-400 hover:shadow-xs transition-all group"
+                  >
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] font-mono font-semibold text-slate-500 bg-white px-2 py-0.5 rounded border border-slate-200">
+                        {paper.domain}
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">
+                        {paper.venue} &bull; {paper.year}
+                      </span>
+                    </div>
+                    <h4 className="font-bold text-slate-900 text-xs sm:text-sm group-hover:text-slate-900 transition-colors">
+                      {paper.title}
+                    </h4>
+                    <p className="text-[11px] text-slate-500 truncate mt-1">
+                      {paper.authors}
+                    </p>
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>

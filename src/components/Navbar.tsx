@@ -7,17 +7,18 @@ import {
   Share2,
   FileText,
   PlusCircle,
-  Sparkles,
+  Upload,
 } from 'lucide-react';
 import { usePaper } from '../context/PaperContext';
 
 export const Navbar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { currentPaper, setCurrentPaper } = usePaper();
+  const { currentPaper } = usePaper();
   const [copied, setCopied] = useState(false);
 
-  const isWorkspace = location.pathname === '/' || location.pathname.startsWith('/analysis');
+  const isUpload = location.pathname === '/upload';
+  const isWorkspace = location.pathname === '/analysis' || location.pathname.startsWith('/analysis/');
   const isSearch = location.pathname === '/search';
 
   const handleShare = () => {
@@ -28,8 +29,8 @@ export const Navbar: React.FC = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleNewAnalysis = () => {
-    navigate('/analysis');
+  const handleGoToUpload = () => {
+    navigate('/upload');
   };
 
   return (
@@ -37,7 +38,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Formal Academic Logo & Title */}
-          <Link to="/" className="flex items-center space-x-3 group">
+          <Link to="/upload" className="flex items-center space-x-3 group">
             <div className="h-9 w-9 rounded-lg bg-slate-900 flex items-center justify-center text-white shadow-xs">
               <BookOpen className="w-5 h-5 text-slate-100" />
             </div>
@@ -51,13 +52,25 @@ export const Navbar: React.FC = () => {
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 hidden sm:block">
-                Scholarly Research Synthesis & Intelligence
+                Academic Research Synthesis Suite
               </p>
             </div>
           </Link>
 
           {/* Primary Navigation Tabs */}
           <nav className="flex items-center space-x-1 sm:space-x-2 text-xs font-semibold text-slate-600">
+            <Link
+              to="/upload"
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg transition-all ${
+                isUpload
+                  ? 'bg-slate-100 text-slate-900 font-bold border border-slate-200'
+                  : 'hover:text-slate-900 hover:bg-slate-50'
+              }`}
+            >
+              <Upload className="w-3.5 h-3.5 text-slate-500" />
+              <span>Ingest Manuscript</span>
+            </Link>
+
             <Link
               to="/analysis"
               className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg transition-all ${
@@ -86,7 +99,7 @@ export const Navbar: React.FC = () => {
             </Link>
           </nav>
 
-          {/* Action Buttons */}
+          {/* Action Buttons: Navigate to separate upload screen */}
           <div className="flex items-center space-x-2">
             {currentPaper && (
               <button
@@ -99,17 +112,17 @@ export const Navbar: React.FC = () => {
                 ) : (
                   <Share2 className="w-3.5 h-3.5 text-slate-500" />
                 )}
-                <span>{copied ? 'Copied' : 'Export Briefing'}</span>
+                <span>{copied ? 'Copied' : 'Export'}</span>
               </button>
             )}
 
             <button
-              onClick={handleNewAnalysis}
+              onClick={handleGoToUpload}
               id="navbar-analyze-btn"
               className="flex items-center space-x-1.5 text-xs text-white bg-slate-900 hover:bg-slate-800 px-3.5 py-2 rounded-lg font-semibold shadow-xs transition-all active:scale-98"
             >
               <PlusCircle className="w-3.5 h-3.5 text-slate-300" />
-              <span>Analyze Paper</span>
+              <span>Analyse New Paper</span>
             </button>
           </div>
         </div>

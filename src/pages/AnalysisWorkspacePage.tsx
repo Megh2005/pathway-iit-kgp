@@ -10,13 +10,12 @@ import {
   CheckCircle2,
   Clock,
   Printer,
-  ChevronRight,
   Cpu,
   Layers,
   Scale,
   Compass,
-  X,
   PlusCircle,
+  ArrowRight,
 } from 'lucide-react';
 import { usePaper } from '../context/PaperContext';
 import { ExecutiveBriefingView } from '../components/ExecutiveBriefingView';
@@ -26,7 +25,6 @@ import { RelatedPapersRadar } from '../components/RelatedPapersRadar';
 import { BuzzAndTrendsSection } from '../components/BuzzAndTrendsSection';
 import { FutureScopeSection } from '../components/FutureScopeSection';
 import { PaperChatDrawer } from '../components/PaperChatDrawer';
-import { PaperIngestionConsole } from '../components/PaperIngestionConsole';
 
 type ActiveTab = 'briefing' | 'methodology' | 'analogies' | 'literature' | 'reception' | 'future';
 
@@ -37,10 +35,9 @@ export const AnalysisWorkspacePage: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<ActiveTab>('briefing');
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isIngestionModalOpen, setIsIngestionModalOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
-  // Sync tab from URL params if present (supporting both legacy & formal tab keys)
+  // Sync tab from URL params if present
   useEffect(() => {
     if (tab) {
       if (tab === 'feed' || tab === 'briefing') setActiveTab('briefing');
@@ -76,11 +73,44 @@ export const AnalysisWorkspacePage: React.FC = () => {
     window.print();
   };
 
-  // If no paper is currently loaded, display the Paper Ingestion Console directly!
+  // If no paper is currently loaded, display a clean, dedicated prompt to go to the Upload Screen
   if (!currentPaper) {
     return (
-      <div className="min-h-[85vh] bg-slate-50 py-10 px-4 sm:px-6 lg:px-8">
-        <PaperIngestionConsole />
+      <div className="min-h-[80vh] flex items-center justify-center p-4 bg-slate-50">
+        <div className="max-w-md w-full text-center bg-white rounded-2xl p-8 sm:p-10 border border-slate-200 shadow-xs space-y-5">
+          <div className="w-14 h-14 rounded-2xl bg-slate-100 text-slate-800 flex items-center justify-center mx-auto border border-slate-200">
+            <BookOpen className="w-7 h-7" />
+          </div>
+
+          <div className="space-y-2">
+            <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+              No Research Manuscript Loaded
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+              Upload an academic PDF or select a landmark publication to view its comprehensive technical dossier, novel outputs, and comparative analogies.
+            </p>
+          </div>
+
+          <div className="space-y-2.5 pt-2">
+            <button
+              onClick={() => navigate('/upload')}
+              id="empty-state-upload-btn"
+              className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs shadow-xs transition-all active:scale-98"
+            >
+              <Upload className="w-4 h-4" />
+              <span>Go to Paper Upload Screen</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={() => navigate('/search')}
+              className="w-full inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 font-semibold text-xs border border-slate-200 transition-colors"
+            >
+              <Search className="w-3.5 h-3.5 text-slate-400" />
+              <span>Or Explore Grounded Literature</span>
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -129,22 +159,23 @@ export const AnalysisWorkspacePage: React.FC = () => {
                 </span>
               </p>
 
-              {/* Executive TL;DR Card */}
+              {/* Executive Summary Card */}
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200 text-xs sm:text-sm text-slate-800">
                 <strong className="font-bold text-slate-900 block mb-1">Executive Summary:</strong>
                 <p className="leading-relaxed font-normal">{paperMeta.tldr}</p>
               </div>
             </div>
 
-            {/* Quick Action Buttons */}
+            {/* Action Buttons: Navigate to separate upload screen - NO POPUPS */}
             <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 shrink-0">
               <button
-                onClick={() => setIsIngestionModalOpen(true)}
-                className="inline-flex items-center gap-1.5 text-xs text-slate-700 bg-white hover:bg-slate-50 px-3.5 py-2 rounded-lg font-semibold border border-slate-200 transition-colors shadow-xs"
-                title="Analyze a different research paper"
+                onClick={() => navigate('/upload')}
+                id="workspace-analyze-new-paper-btn"
+                className="inline-flex items-center gap-1.5 text-xs text-slate-900 bg-slate-100 hover:bg-slate-200 px-3.5 py-2 rounded-lg font-bold border border-slate-300 transition-colors shadow-xs"
+                title="Go to the upload screen to analyze another paper"
               >
-                <PlusCircle className="w-3.5 h-3.5 text-slate-500" />
-                <span>New Paper</span>
+                <PlusCircle className="w-3.5 h-3.5 text-slate-700" />
+                <span>Analyse New Paper</span>
               </button>
 
               <button
@@ -294,25 +325,6 @@ export const AnalysisWorkspacePage: React.FC = () => {
         onClose={() => setIsChatOpen(false)}
         paperData={currentPaper}
       />
-
-      {/* Modal for Ingesting a New Paper */}
-      {isIngestionModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-xs">
-          <div className="relative w-full max-w-3xl bg-white rounded-2xl shadow-xl overflow-hidden max-h-[90vh] overflow-y-auto">
-            <button
-              onClick={() => setIsIngestionModalOpen(false)}
-              className="absolute top-4 right-4 z-10 p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
-              title="Close"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <PaperIngestionConsole
-              compact={true}
-              onAnalysisSuccess={() => setIsIngestionModalOpen(false)}
-            />
-          </div>
-        </div>
-      )}
     </div>
   );
 };
